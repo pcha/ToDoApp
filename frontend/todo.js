@@ -1,0 +1,1 @@
+const todoItem = "<div class='todo-item'><input type='checkbox' class='todo-ckb'><span class='todo-text'>Task description</span><button><</button></div>"
