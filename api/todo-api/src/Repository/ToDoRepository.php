@@ -2,9 +2,14 @@
 
 namespace App\Repository;
 
+use App\Entity\Audit;
 use App\Entity\ToDo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use http\Encoding\Stream\Enbrotli;
+use function Webmozart\Assert\Tests\StaticAnalysis\false;
+use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
 /**
  * @method ToDo|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +24,66 @@ class ToDoRepository extends ServiceEntityRepository
         parent::__construct($registry, ToDo::class);
     }
 
-    // /**
-    //  * @return ToDo[] Returns an array of ToDo objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @throws ORMException
+     * @throws \App\Exceptions\InvalidActionException
+     */
+    public function create(string $title, bool $completed=false): ToDo
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $task = new ToDo();
+        $task->setTitle($title)
+            ->setCompleted($completed)
+            ->setCreatedAt(new \DateTimeImmutable());
+        $this->getEntityManager()->persist($task);
+        $this->getEntityManager()->flush();
+        $this->createAudit(AuditRepository::ACTION_CREATE, $task);
+        return $task;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?ToDo
+    /**
+     * @param ToDo $task
+     * @param string|null $title
+     * @param bool|null $completed
+     * @throws ORMException
+     * @throws \App\Exceptions\InvalidActionException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function update(ToDo $task, ?string $title=null, ?bool $completed=null): void
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        if (null !== $title) $task->setTitle($title);
+        if (null !== $completed) $task->setCompleted($completed);
+        $task->setUpdatedAt(new \DateTimeImmutable());
+        $this->getEntityManager()->persist($task);
+
+        $this->createAudit(AuditRepository::ACTION_UPDATE, $task);
     }
-    */
+
+    /**
+     * @param ToDo $task
+     * @throws ORMException
+     * @throws \App\Exceptions\InvalidActionException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function remove(ToDo $task):void
+    {
+        $this->getEntityManager()->remove($task);
+
+        $this->createAudit(AuditRepository::ACTION_DELETE, $task);
+    }
+
+    /**
+     * @param string $action
+     * @param ToDo $task
+     * @throws ORMException
+     * @throws \App\Exceptions\InvalidActionException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function createAudit(string $action, ToDo $task): void
+    {
+        /**
+         * @var AuditRepository $auditRepo
+         */
+        $auditRepo = $this->getEntityManager()->getRepository(Audit::class);
+        $auditRepo->createFor($action, $task);
+    }
 }

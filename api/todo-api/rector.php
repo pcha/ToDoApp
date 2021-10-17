@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Core\Configuration\Option;
+use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\Php74\Rector\Property\TypedPropertyRector;
 use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
 use Rector\Php80\ValueObject\AnnotationToAttribute;
@@ -20,16 +21,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     // Define what rule sets will be applied
     $containerConfigurator->import(SetList::DEAD_CODE);
     $containerConfigurator->import(SetList::PHP_80);
-    $containerConfigurator->services()->set(AnnotationToAttributeRector::class)
-        ->call('configure', [[
-            AnnotationToAttributeRector::ANNOTATION_TO_ATTRIBUTE => ValueObjectInliner::inline([
-                new AnnotationToAttribute('Symfony\Component\Routing\Annotation\Route'),
-            ]),
-        ]]);
+    $containerConfigurator->import(DoctrineSetList::DOCTRINE_ORM_29);
 
-    // get services (needed for register a single rule)
-    // $services = $containerConfigurator->services();
-
-    // register a single rule
-    // $services->set(TypedPropertyRector::class);
 };

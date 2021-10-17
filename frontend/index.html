@@ -7,9 +7,38 @@
 <body>
  <h1>To Do</h1>
 
- <div class='todo-item'><input type='checkbox' class='todo-ckb'><span class='todo-text'>Task description</span><button><</button></div>
+ <div id="generalContainer" class="container">
+    <div id="tasksContainer">
+    </div>
+     <br />
+     <div id="reportsContainer">
+         <h2>Reports</h2>
+         <div id="#generalReport">
+            <b>General report</b><br/>
+             <div id="rep-action-filter">
+                 <label for="rep-action-filter-sel">Filter by:</label>
+                 <select id="rep-action-filter-sel">
+                 </select>
+             </div>
+             <div id="rep-task-sorter">
+                 <label for="rep-task-sorter-sel">Sort by task:</label>
+                 <select id="rep-task-sorter-sel">
+                 </select>
+             </div>
+             <button id="gen-rep-btn">Generate</button>
+         </div>
+         <div id="#tasks-report">
+             <b>Tasks report</b><br/>
+             <input type="number" id="task-rep-tid-input"/>
+             <button id="task-rep-btn">Generate</button>
+         </div>
+     </div>
+ </div>
  <!-- Bootstrap -->
  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+ <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script src="./todo.js"></script>
 </body>
 </html>

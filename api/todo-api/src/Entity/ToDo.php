@@ -8,42 +8,45 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\Timestampable;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bundle\MakerBundle\Tests\tmp\current_project\src\Entity\TimestampableTrait;
+use function Webmozart\Assert\Tests\StaticAnalysis\false;
+use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
-/**
- * @ORM\Entity(repositoryClass=ToDoRepository::class)
- * @ORM\Table(name="todo")
- */
+#[ORM\Entity(repositoryClass: ToDoRepository::class)]
+#[ORM\Table(name: 'todo')]
 class ToDo
 {
+    /**
+     * @var int|null
+     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @var string|null ]
      */
-    private ?int $id;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $title = null;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var bool|null
      */
-    private ?string $title;
+    #[ORM\Column(type: 'boolean')]
+    private bool $completed = false;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @var \DateTimeInterface|null
      */
-    private ?bool $completed;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $created_at = null;
 
     /**
-     * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="create")
+     * @var \DateTimeInterface|null
      */
-    private ?\DateTime $created_at;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeInterface $updated_at = null;
 
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     * @Gedmo\Timestampable(on="update")
-     */
-    private ?\DateTimeImmutable $updated_at;
 
     public function getId(): ?int
     {
@@ -62,7 +65,7 @@ class ToDo
         return $this;
     }
 
-    public function getCompleted(): ?bool
+    public function getCompleted(): bool
     {
         return $this->completed;
     }
@@ -74,24 +77,24 @@ class ToDo
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTime
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTime $created_at): self
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
 

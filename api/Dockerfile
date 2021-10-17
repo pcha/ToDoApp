@@ -20,17 +20,17 @@ RUN apt-get install -y zlib1g-dev libicu-dev g++ \
     && docker-php-ext-configure opcache \
     && docker-php-ext-install opcache \
     && docker-php-ext-configure pdo_mysql \
-    && docker-php-ext-install pdo_mysql \
-    && docker-php-ext-configure zip \
-    && docker-php-ext-install zip
+    && docker-php-ext-install pdo_mysql
+RUN pecl install uopz
 
 COPY ./000-default.conf /etc/apache2/sites-available/000-default.conf
+#COPY ./todo-api /var/www
 
 RUN a2enmod rewrite
 
-RUN echo "Creating app datatabase..." && php bin/console doctrine:database:create --if-not-exists -n \
-    && echo "Running migrations..." && php bin/console doctrine:migration:migrate -n \
-    && echo "Creating test datatabase..." && php bin/console doctrine:database:create --if-not-exists -n --env=test \
-    && echo "Runnig migrations in test database" && php bin/console doctrine:migration:migrate -n
+#RUN echo "Creating app datatabase..." && pwd && ls && php bin/console doctrine:database:create --if-not-exists -n \
+#    && echo "Running migrations..." && php bin/console doctrine:migration:migrate -n \
+#    && echo "Creating test datatabase..." && php bin/console doctrine:database:create --if-not-exists -n --env=test \
+#    && echo "Runnig migrations in test database" && php bin/console doctrine:migration:migrate -n
 
 EXPOSE 80

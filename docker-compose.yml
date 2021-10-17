@@ -7,6 +7,10 @@ services:
     - 8001:80
     volumes:
     - ./api/todo-api:/var/www
+    depends_on:
+      - mysql
+    command:
+      - ./run.sh
   frontend:
     build:
       ./frontend
@@ -16,7 +20,5 @@ services:
     - ./frontend:/usr/share/nginx/html
   mysql:
     image: mysql
-    ports:
-    - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: pass
